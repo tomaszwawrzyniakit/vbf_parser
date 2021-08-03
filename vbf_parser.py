@@ -44,11 +44,11 @@ if header_len < 100:
     print('Header too short! Unknown format')
     quit(-1)
 
-
-out_hex = intelhex.IntelHex()
-
 offset = header_len
+i = 0
 while offset < len(data):
+
+    out_hex = intelhex.IntelHex()
 
     [block_addr, block_len] = struct.unpack('>2L', data[offset: offset + 8])
     offset += 8
@@ -61,9 +61,8 @@ while offset < len(data):
 
     crc_res = 'ok' if crc16(block_data) == crc else 'error'
     print("Block adr: 0x%X length: 0x%X crc %s" % (block_addr, block_len, crc_res))
-
     out_hex.frombytes(block_data, block_addr)
 
-
-out_hex.tofile(inname + '.hex', 'hex')
-out_hex.tofile(inname + '.bin', 'bin')
+    out_hex.tofile(inname + str(i) + '.hex', 'hex')
+    out_hex.tofile(inname + str(i) + '.bin', 'bin')
+    i=i+1
